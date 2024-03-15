@@ -68,12 +68,15 @@ async function CrudShowcase() {
   const session = await getServerAuthSession();
   if (!session?.user) return null;
 
-  const latestPost = await api.post.getLatest.query();
+  const post = await api.post.getLatest.query();
 
   return (
     <div className="w-full max-w-xs">
-      {latestPost ? (
-        <p className="truncate">Your most recent post: {latestPost.name}</p>
+      {post ? (
+        <div>
+          <img src={post.file64} alt="User uploaded image..." />
+          <p className="truncate">Your most recent post: {post.name}</p>
+        </div>
       ) : (
         <p>You have no posts yet.</p>
       )}

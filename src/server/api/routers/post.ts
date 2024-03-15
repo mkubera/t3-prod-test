@@ -16,16 +16,20 @@ export const postRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
-    .input(z.object({ name: z.string().min(1) }))
-    .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
+    .input(
+      z.object({
+        name: z.string().min(1),
+        file64: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input: { name, file64 } }) => {
       return ctx.db.post.create({
         data: {
-          name: input.name,
+          name,
+          file64,
           createdBy: { connect: { id: ctx.session.user.id } },
         },
+        select: { name: true },
       });
     }),
 
